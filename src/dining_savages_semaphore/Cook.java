@@ -2,12 +2,12 @@ package dining_savages_semaphore;
 import java.util.concurrent.Semaphore;
 
 public class Cook extends Thread {
-	private Semaphore awakeCook, reffiled;
+	private Semaphore refill, eat;
 	private Pot pot;
 	
-	public Cook(Semaphore awakeCook, Semaphore reffiled, Pot pot){
-		this.awakeCook = awakeCook;
-		this.reffiled = reffiled;
+	public Cook(Semaphore refill, Semaphore eat, Pot pot){
+		this.refill = refill;
+		this.eat = eat;
 		this.pot = pot;
 	}
 	
@@ -20,9 +20,9 @@ public class Cook extends Thread {
 	public void run() {
 		while(true) {
 			try {
-				this.awakeCook.acquire();
+				this.refill.acquire();
 				this.refill(this.pot.getM());
-				this.reffiled.release();
+				this.eat.release();
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();

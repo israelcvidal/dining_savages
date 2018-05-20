@@ -3,15 +3,15 @@ import java.util.concurrent.Semaphore;
 import java.lang.Thread;
 
 public class Savage extends Thread{
-	private Semaphore awakeCook, mutex, reffiled;
+	private Semaphore mutex, eat, refill;
 	private Pot pot;
 	private int id; 
 	
-	public Savage(int id, Semaphore awakeCook, Semaphore mutex, Semaphore reffiled, Pot pot){
+	public Savage(int id, Semaphore mutex, Semaphore eat, Semaphore refill, Pot pot){
 		this.id = id;
-		this.awakeCook = awakeCook;
 		this.mutex = mutex;
-		this.reffiled = reffiled;
+		this.eat = eat;
+		this.refill = refill;
 		this.pot = pot;
 	}
 	
@@ -24,11 +24,12 @@ public class Savage extends Thread{
 		while(true) {
 			try {
 				this.mutex.acquire();
+				
 				if(!this.pot.hasFood()) {
 					System.out.println("Savage " + this.id + " found no food!");
 
-					this.awakeCook.release();
-					this.reffiled.acquire();
+					this.refill.release();
+					this.eat.acquire();
 				}
 				
 				int foodLeft = this.pot.getFood();
